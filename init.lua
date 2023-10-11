@@ -74,6 +74,7 @@ require('packer').startup(function(use)
   use "rebelot/kanagawa.nvim"
   use 'nyngwang/nvimgelion'
   use({ 'rose-pine/neovim', as = 'rose-pine' })
+  use { "catppuccin/nvim", as = "catppuccin" }
 
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
@@ -85,7 +86,18 @@ require('packer').startup(function(use)
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
-  
+ 
+  -- Database plugin
+  use {
+      "tpope/vim-dadbod",
+      requires = { 
+       "kristijanhusak/vim-dadbod-ui",  
+       "kristijanhusak/vim-dadbod-completion" 
+      },
+      config = function()
+        vim.g.db_ui_save_location = "~/.config/nvim/db_ui"
+      end,
+  }
   -- plugins by Yogesh
   -- use '/Users/yogesh/personal_projects/jest_runner.nvim'
 
@@ -179,6 +191,9 @@ vim.keymap.set({ 'n', 'v' }, 'k', 'gj')
 
 -- enable relative lines
 vim.wo.relativenumber = true
+
+local map = vim.keymap.set
+map("i", "<C-j>", "copilot#Accept('<CR>')", {noremap = true, silent = true, expr=true, replace_keycodes = false })
 
 
 -- [[ Highlight on yank ]]
@@ -288,6 +303,7 @@ pcall(require('telescope').load_extension, 'file_browser')
 vim.cmd 'colorscheme kanagawa'
 -- vim.cmd 'colorscheme nvimgelion'
 -- vim.cmd 'colorscheme rose-pine'
+-- vim.cmd 'colorscheme catppuccin-mocha'
 
 -- set transparent background
 -- vim.cmd 'hi Normal guibg=NONE ctermbg=NONE'
@@ -348,7 +364,7 @@ vim.api.nvim_set_keymap(
 -- setup :w to <leader>w
 vim.api.nvim_set_keymap(
   "n",
-  "<leader>w",
+  ":W",
   ":w",
   { noremap = true }
 )
@@ -392,7 +408,7 @@ vim.api.nvim_set_keymap(
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'javascript', 'typescript', 'help', 'vim', 'kotlin' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'javascript', 'typescript', 'vim', 'kotlin' },
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
@@ -598,3 +614,4 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
