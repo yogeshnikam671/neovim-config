@@ -237,6 +237,15 @@ require 'git-blame-line'.setup({
   }
 })
 
+local project_root = {
+  function()
+    return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+  end,
+  icon = "",
+  cond = hide_in_width,
+  separator = '',
+}
+
 -- Set lualine as statusline
 -- See `:help lualine.txt`
 require('lualine').setup {
@@ -246,6 +255,12 @@ require('lualine').setup {
     component_separators = '|',
     section_separators = '',
   },
+  sections = {
+    lualine_c = {
+      project_root,
+      { "filename", file_status=true, newfile_status=true, path=1, },
+    }
+  }
 }
 
 -- Enable nvim-tree
@@ -614,4 +629,3 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
